@@ -1,0 +1,29 @@
+{
+  "name": "paketi-nbp",
+  "version": "1.0.0",
+  "description": "Projekat za predmet Napredne baze podataka",
+  "homepage": "https://github.com/A-M-1203/paketi-nbp#readme",
+  "bugs": {
+    "url": "https://github.com/A-M-1203/paketi-nbp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/A-M-1203/paketi-nbp.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js",
+    "debug": "ndb server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.1.5",
+    "morgan": "^1.10.1",
+    "validator": "^13.15.26"
+  }
+}

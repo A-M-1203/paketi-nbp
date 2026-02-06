@@ -1,5 +1,4 @@
 const mongoose=require('mongoose');
-const courier = require('./courier');
 
 const individualSchema=new mongoose.Schema({
     individualId:{

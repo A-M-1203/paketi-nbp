@@ -1,22 +1,5 @@
 const mongoose=require('mongoose');
 
-const vehicleSchema=new mongoose.Schema({
-    type:{
-        type:String
-    },
-    plateNumber:{
-        type:String,
-        required:[true,"Plate number is required"]
-    }
-});
-
-const rating=new mongoose.Schema({
-    rate:Number,
-    individualId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Individual"
-        }
-});
 
 const courierSchema=new mongoose.Schema({
     fullName:{
@@ -30,14 +13,22 @@ const courierSchema=new mongoose.Schema({
         trim:true
     },
     vehicle:{
-        type:vehicleSchema,
-        required:[true,"Vehicle is required"]
+        type:{
+            type:String
+        },
+        plateNumber:{
+            type:String,
+            required:[true,"Plate number is required"]
+        }
     },
     status:{
         type:Boolean,
         required:[true,"Status is required"]
     },
-    ratings:[rating],
+    ratings:[{
+        rate:Number,
+        email:String
+    }],
     region:{
         type:String,
         required:[true,"Region is required"]

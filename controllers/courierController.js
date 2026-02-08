@@ -24,9 +24,9 @@ exports.findCouriersByStatusAndRegion=catchAsync(async (req,res,next)=>{
 
 
 exports.rateCourier=catchAsync(async(req,res,next)=>{
-    const result=await Courier.updateOne({_id:req.body.courierId,"ratings.individualId":req.body.userId},{$set:{"ratings.$.rate":req.body.rate}});
+    const result=await Courier.updateOne({_id:req.body.courierId,"ratings.email":req.body.email},{$set:{"ratings.$.rate":req.body.rate}});
     if(result.matchedCount===0){
-        await Courier.updateOne({_id:req.body.courierId},{$push:{ratings:{individualId:req.body.userId,rate:req.body.rate}}});
+        await Courier.updateOne({_id:req.body.courierId},{$push:{ratings:{email:req.body.email,rate:req.body.rate}}});
     }
     const courier=await Courier.findOne({_id:req.body.courierId});
     res.status(200).json({

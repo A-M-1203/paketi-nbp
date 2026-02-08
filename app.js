@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const individualRouter = require('./routes/individualRoutes');
 const legalEntityRouter = require('./routes/legalEntityRoutes');
 const courierRouter=require('./routes/courierRoutes');
+const shipmentRouter=require("./routes/shipmentRoutes");
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(
 app.use('/api/v1/individuals', individualRouter);
 app.use('/api/v1/legal-entities', legalEntityRouter);
 app.use('/api/v1/courier/',courierRouter);
+app.use("/api/v1/shipment/",shipmentRouter);
 
 module.exports = app;

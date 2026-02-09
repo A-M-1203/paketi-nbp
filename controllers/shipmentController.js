@@ -1,17 +1,23 @@
 const Shipment=require('../models/shipmentModel');
-const Individual=require('../models/individualModel');
+const User=require('../models/userModel');
 const Courier=require('../models/courierModel');
 const catchAsync = require('../utils/catchAsync');
 
 const crypto = require("crypto");
 
+function getSenderDisplayName(user) {
+  return user.role === 'individual'
+    ? `${user.firstName} ${user.lastName}`.trim()
+    : (user.companyName || user.email);
+}
+
 module.exports.createShipment=catchAsync(async (req,res,next)=>{
-    const individual=await Individual.findOne({_id:req.body.userId});
+    const user=await User.findOne({_id:req.body.userId});
     const couirer=await Courier.findOne({_id:req.body.couirerId});
     const newShipment=await Shipment.create({sender:{
-        individualId:individual._id,
-        name:individual.firstName+" "+individual.lastName,
-        email:individual.email
+        userId:user._id,
+        name:getSenderDisplayName(user),
+        email:user.email
     },
     receipent:{
         email:req.body.receipentEmail,
@@ -22,7 +28,7 @@ module.exports.createShipment=catchAsync(async (req,res,next)=>{
         name:couirer.fullName    
     },
     weight:req.body.weight,
-    statuses:[{message:"Packet created",date:Date.now()}],
+    statuses:[{ status: 'In warehouse', dateTime: new Date() }],
     confirmUsed:false,
     confirmToken:crypto.randomBytes(16).toString("hex")
 });
@@ -35,7 +41,7 @@ module.exports.createShipment=catchAsync(async (req,res,next)=>{
 });
 
 module.exports.getShipmentsFinished=catchAsync(async (req,res,next)=>{
-    const shipments=await Shipment.find({"sender.individualId":req.query.individualId,confirmUsed:true});
+    const shipments=await Shipment.find({"sender.userId":req.query.userId,confirmUsed:true});
     res.status(200).json({
         data:{
             shipments
@@ -44,7 +50,7 @@ module.exports.getShipmentsFinished=catchAsync(async (req,res,next)=>{
 });
 
 module.exports.getShipmentsUnFinished=catchAsync(async (req,res,next)=>{
-    const shipments=await Shipment.find({"sender.individualId":req.query.individualId,confirmUsed:false});
+    const shipments=await Shipment.find({"sender.userId":req.query.userId,confirmUsed:false});
     res.status(200).json({
         data:{
             shipments
@@ -53,7 +59,7 @@ module.exports.getShipmentsUnFinished=catchAsync(async (req,res,next)=>{
 });
 
 module.exports.finishShipment=catchAsync(async (req,res,next)=>{
-    const suc=await Shipment.updateOne({confirmToken :req.body.token,confirmUsed:false},{confirmUsed:true,statuses:{$push:{statuses:{message:"Shipment finished",date:Date.now()}}}});
+    const suc=await Shipment.updateOne({confirmToken :req.body.token,confirmUsed:false},{confirmUsed:true,$push:{statuses:{status:'Delivered',dateTime:new Date()}}});
     console.log(suc);
     if(suc.modifiedCount===1){
         res.status(200).json({
@@ -78,7 +84,7 @@ module.exports.updateShipment=catchAsync(async (req,res,next)=>{
 });
 
 module.exports.addStatus=catchAsync(async (req,res,next)=>{
-    await Shipment.updateOne({_id:req.body._id},{statuses:{$push:{statuses:{message:req.body.message,date:Date.now()}}}});
+    await Shipment.updateOne({_id:req.body._id},{$push:{statuses:{status:req.body.status,dateTime:new Date()}}});
     const shipment=await Shipment.findById(req.body._id);
     res.status(200).json({
         data:{

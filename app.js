@@ -2,8 +2,11 @@
 const express = require('express');
 const morgan = require('morgan');
 
-const individualRouter = require('./routes/individualRoutes');
-const legalEntityRouter = require('./routes/legalEntityRoutes');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
+
+const userRouter = require('./routes/userRoutes');
+const authRouter = require('./routes/authRoutes');
 const courierRouter=require('./routes/courierRoutes');
 const shipmentRouter=require("./routes/shipmentRoutes");
 
@@ -22,9 +25,15 @@ app.use(
 );
 
 // rute
-app.use('/api/v1/individuals', individualRouter);
-app.use('/api/v1/legal-entities', legalEntityRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/courier/',courierRouter);
 app.use("/api/v1/shipment/",shipmentRouter);
+
+app.all('/{*any}', (req, res, next) => {
+  next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));
+});
+
+app.use(globalErrorHandler);
 
 module.exports = app;

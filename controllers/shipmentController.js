@@ -8,7 +8,7 @@ const mailSender=require('../utils/mail');
 const crypto = require("crypto");
 
 function getSenderDisplayName(user) {
-  return user.role === 'individual'
+  return user.role === 'fizicko lice'
     ? `${user.firstName} ${user.lastName}`.trim()
     : (user.companyName || user.email);
 }

@@ -4,11 +4,11 @@ const AppError = require('../utils/appError');
 
 function stripRoleFields(body) {
   const b = { ...body };
-  if (b.role === 'individual') {
+  if (b.role === 'fizicko lice') {
     delete b.companyName;
     delete b.taxId;
   }
-  if (b.role === 'legal entity') {
+  if (b.role === 'pravno lice') {
     delete b.firstName;
     delete b.lastName;
   }

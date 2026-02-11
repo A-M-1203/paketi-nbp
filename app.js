@@ -10,6 +10,7 @@ const authRouter = require('./routes/authRoutes');
 const courierRouter=require('./routes/courierRoutes');
 const shipmentRouter=require("./routes/shipmentRoutes");
 const branchRouter=require('./routes/branchRoutes');
+const testAuthRouter = require('./routes/testAuthRoutes');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/courier/',courierRouter);
 app.use("/api/v1/shipment/",shipmentRouter);
 app.use("/api/v1/branch/",branchRouter);
+app.use('/api/v1/test-auth', testAuthRouter);
 
 app.all('/{*any}', (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404));

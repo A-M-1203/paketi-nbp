@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Role is required'],
       enum: {
-        values: ['individual', 'legal entity'],
-        message: 'Role must be either individual or legal entity'
+        values: ['fizicko lice', 'pravno lice'],
+        message: 'Role must be either fizicko lice or pravno lice'
       }
     },
     firstName: {
@@ -165,11 +165,11 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre('save', function () {
-  if (this.role === 'individual') {
+  if (this.role === 'fizicko lice') {
     this.set('companyName', undefined);
     this.set('taxId', undefined);
   }
-  if (this.role === 'legal entity') {
+  if (this.role === 'pravno lice') {
     this.set('firstName', undefined);
     this.set('lastName', undefined);
   }
@@ -186,13 +186,13 @@ userSchema.methods.correctPassword = async function (candidatePassword) {
 };
 
 userSchema.pre('validate', function () {
-  if (this.role === 'individual') {
-    if (!this.firstName) this.invalidate('firstName', 'First name is required for individual');
-    if (!this.lastName) this.invalidate('lastName', 'Last name is required for individual');
+  if (this.role === 'fizicko lice') {
+    if (!this.firstName) this.invalidate('firstName', 'First name is required for fizicko lice');
+    if (!this.lastName) this.invalidate('lastName', 'Last name is required for fizicko lice');
   }
-  if (this.role === 'legal entity') {
-    if (!this.companyName) this.invalidate('companyName', 'Company name is required for legal entity');
-    if (!this.taxId) this.invalidate('taxId', 'Tax ID is required for legal entity');
+  if (this.role === 'pravno lice') {
+    if (!this.companyName) this.invalidate('companyName', 'Company name is required for pravno lice');
+    if (!this.taxId) this.invalidate('taxId', 'Tax ID is required for pravno lice');
   }
 });
 

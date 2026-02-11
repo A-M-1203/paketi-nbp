@@ -13,4 +13,6 @@ router.route("/getCouirierShip").get(shipmentControllers.getBasenOnCourier);
 
 router.route("/status").put(shipmentControllers.addStatus);
 
+router.route("/assign").put(shipmentControllers.setBranchId);
+
 module.exports=router;

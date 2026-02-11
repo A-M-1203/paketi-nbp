@@ -1,7 +1,9 @@
 const Shipment=require('../models/shipmentModel');
 const User=require('../models/userModel');
 const Courier=require('../models/courierModel');
+
 const catchAsync = require('../utils/catchAsync');
+const mailSender=require('../utils/mail');
 
 const crypto = require("crypto");
 
@@ -19,9 +21,13 @@ module.exports.createShipment=catchAsync(async (req,res,next)=>{
         name:getSenderDisplayName(user),
         email:user.email
     },
-    receipent:{
-        email:req.body.receipentEmail,
-        name:req.body.receipentFirst+" "+req.body.receipentLast
+    recipient:{
+        email: req.body.receipentEmail,
+        name: req.body.receipentFirst + " " + req.body.receipentLast,
+        phoneNumber: req.body.phoneNumber,
+        address: req.body.address,
+        city: req.body.city,
+        postalCode: req.body.postalCode
     },
     courier:{
         courierId:req.body.couirerId,
@@ -38,6 +44,7 @@ module.exports.createShipment=catchAsync(async (req,res,next)=>{
             shipment:newShipment
         }
     });
+    mailSender(req.body.receipentEmail,"Status update",JSON.stringify(newShipment));
 });
 
 module.exports.getShipmentsFinished=catchAsync(async (req,res,next)=>{
@@ -61,16 +68,19 @@ module.exports.getShipmentsUnFinished=catchAsync(async (req,res,next)=>{
 module.exports.finishShipment=catchAsync(async (req,res,next)=>{
     const suc=await Shipment.updateOne({confirmToken :req.body.token,confirmUsed:false},{confirmUsed:true,$push:{statuses:{status:'Delivered',dateTime:new Date()}}});
     console.log(suc);
+    const shipment=await Shipment.findOne({confirmToken:req.body.token});
     if(suc.modifiedCount===1){
         res.status(200).json({
             status:"success"
         });
+        mailSender(shipment.recipient.email,"Status update",JSON.stringify(shipment));
     }
     else{
         res.status(400).json({
             status:"Failure"
         })
     }
+    
 });
 
 module.exports.updateShipment=catchAsync(async (req,res,next)=>{
@@ -91,6 +101,7 @@ module.exports.addStatus=catchAsync(async (req,res,next)=>{
             shipment
         }
     });
+    mailSender(shipment.recipient.email,"Status update",JSON.stringify(shipment));
 });
 
 module.exports.deleteShipment=catchAsync(async (req,res,next)=>{
@@ -114,4 +125,21 @@ module.exports.getBasenOnCourier=catchAsync(async (req,res,next)=>{
             shipments
         }
     });
+})
+
+module.exports.setBranchId=catchAsync(async (req,res,next)=>{
+    const result=await Shipment.updateOne({_id:req.body._id},{branchId:req.body.branchId});
+    const shipment=await Shipment.findById(req.body._id);
+    if(result.matchedCount===1){
+        res.status(200).json({
+            status:"success"
+        });
+        mailSender(shipment.recipient.email,"Branch added","You were able to set branchid");
+    }
+    else{
+        res.status(400).json({
+            status:"failure"
+        });
+    }
+    
 })

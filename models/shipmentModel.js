@@ -1,11 +1,28 @@
 const mongoose=require('mongoose');
-
+const validator=require('validator');
 
 const shipmentSchema=new mongoose.Schema({
     sender: {
-        required: [true, "Sender is required"],
-        type: mongoose.Schema.ObjectId,
-        ref: "User"
+        userId:{
+            required: [true, "Sender is required"],
+            type: mongoose.Schema.ObjectId,
+            ref: "User"
+        },
+        name: {
+            type: String,
+            required: [true, "Sender name is required"],
+            trim: true
+          },
+          email: {
+            type: String,
+            required: [true, "Sender email is required"],
+            trim: true,
+            lowercase: true,
+            validate: {
+              validator: (v) => validator.isEmail(v),
+              message: "Please provide a valid email address"
+            }
+          }
     },
     recipient: {
         email: {
@@ -82,10 +99,17 @@ const shipmentSchema=new mongoose.Schema({
             }
         }
     },
-    courierId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Courier",
-      required: [true, "Courier is required"]
+    courier:{
+        courierId: {
+            type: mongoose.Schema.ObjectId,
+            ref: "Courier",
+            required: [true, "Courier is required"]
+        },
+        name: {
+            type: String,
+            required: [true, "Courier name is required"],
+            trim: true
+          }
     },
     weight: {
         type: Number,
@@ -113,11 +137,15 @@ const shipmentSchema=new mongoose.Schema({
         },
         dateTime: {
             type: Date,
-            default: Date.now
+            default: Date.now()
         }
     }],
     confirmToken: String,
-    confirmUsed: Boolean
+    confirmUsed: Boolean,
+    branchId:{
+        type:mongoose.Schema.ObjectId,
+        ref: "Branch"
+    }
 });
 
 module.exports = mongoose.model("Shipment", shipmentSchema);

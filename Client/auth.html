@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prijava / Registracija – DevExpress</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">DevExpress</a>
+      <nav class="nav">
+        <a href="index.html">Početna</a>
+        <a href="auth.html?mode=login">Prijava</a>
+        <a href="auth.html?mode=signup">Registracija</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main auth-main">
+    <div class="auth-container">
+      <div class="auth-tabs">
+        <a href="auth.html?mode=login" id="tab-login" class="auth-tab">Prijava</a>
+        <a href="auth.html?mode=signup" id="tab-signup" class="auth-tab">Registracija</a>
+      </div>
+
+      <form id="form-login" class="auth-form hidden">
+        <h1>Prijava</h1>
+        <div class="form-group">
+          <label for="login-email">Email adresa</label>
+          <input type="email" id="login-email" name="email" required autocomplete="email">
+          <span class="field-error" id="login-email-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Lozinka</label>
+          <input type="password" id="login-password" name="password" required autocomplete="current-password">
+          <span class="field-error" id="login-password-error"></span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Prijavi se</button>
+        </div>
+        <div id="login-message" class="form-message"></div>
+      </form>
+
+      <form id="form-signup" class="auth-form hidden">
+        <h1>Registracija</h1>
+
+        <div class="form-group">
+          <label for="signup-role">Tip naloga</label>
+          <select id="signup-role" name="role" required>
+            <option value="fizicko lice">Fizičko lice</option>
+            <option value="pravno lice">Pravno lice</option>
+          </select>
+        </div>
+
+        <div id="signup-individual">
+          <div class="form-group">
+            <label for="signup-firstName">Ime</label>
+            <input type="text" id="signup-firstName" name="firstName" maxlength="50" pattern="[A-Za-z ]+">
+            <span class="field-error" id="signup-firstName-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="signup-lastName">Prezime</label>
+            <input type="text" id="signup-lastName" name="lastName" maxlength="50" pattern="[A-Za-z ]+">
+            <span class="field-error" id="signup-lastName-error"></span>
+          </div>
+        </div>
+
+        <div id="signup-legal" class="hidden">
+          <div class="form-group">
+            <label for="signup-companyName">Naziv kompanije</label>
+            <input type="text" id="signup-companyName" name="companyName" maxlength="100">
+            <span class="field-error" id="signup-companyName-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="signup-taxId">PIB</label>
+            <input type="text" id="signup-taxId" name="taxId" minlength="5" maxlength="25">
+            <span class="field-error" id="signup-taxId-error"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-email">Email adresa</label>
+          <input type="email" id="signup-email" name="email" required minlength="6" maxlength="254" autocomplete="email">
+          <span class="field-error" id="signup-email-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-phoneNumber">Broj telefona</label>
+          <input type="tel" id="signup-phoneNumber" name="phoneNumber" required minlength="8" maxlength="15" pattern="[0-9]+" placeholder="samo cifre">
+          <span class="field-error" id="signup-phoneNumber-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-city">Grad</label>
+          <input type="text" id="signup-city" name="city" required maxlength="50">
+          <span class="field-error" id="signup-city-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-address">Adresa (ulica i broj)</label>
+          <input type="text" id="signup-address" name="address" required maxlength="100">
+          <span class="field-error" id="signup-address-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-postalCode">Poštanski broj</label>
+          <input type="text" id="signup-postalCode" name="postalCode" required minlength="3" maxlength="10">
+          <span class="field-error" id="signup-postalCode-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Lozinka</label>
+          <input type="password" id="signup-password" name="password" required minlength="4" maxlength="50" autocomplete="new-password">
+          <span class="field-error" id="signup-password-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="signup-passwordConfirm">Potvrda lozinke</label>
+          <input type="password" id="signup-passwordConfirm" name="passwordConfirm" required autocomplete="new-password">
+          <span class="field-error" id="signup-passwordConfirm-error"></span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Registruj se</button>
+        </div>
+        <div id="signup-message" class="form-message"></div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <a href="index.html">Početna</a>
+      <a href="auth.html?mode=login">Prijava</a>
+      <a href="auth.html?mode=signup">Registracija</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

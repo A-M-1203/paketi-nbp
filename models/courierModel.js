@@ -4,12 +4,12 @@ const mongoose=require('mongoose');
 const courierSchema=new mongoose.Schema({
     fullName:{
         type:String,
-        required:[true,"Full name is required"],
+        required:[true,"Puno ime je obavezno"],
         trim:true
     },
     phone:{
         type:String,
-        required:[true,"Phone is required"],
+        required:[true,"Telefon je obavezan"],
         trim:true
     },
     vehicle:{
@@ -18,12 +18,12 @@ const courierSchema=new mongoose.Schema({
         },
         plateNumber:{
             type:String,
-            required:[true,"Plate number is required"]
+            required:[true,"Registarska tablica je obavezna"]
         }
     },
     status:{
         type:Boolean,
-        required:[true,"Status is required"]
+        required:[true,"Status je obavezan"]
     },
     ratings:[{
         rate:Number,
@@ -31,7 +31,7 @@ const courierSchema=new mongoose.Schema({
     }],
     region:{
         type:String,
-        required:[true,"Region is required"]
+        required:[true,"Region je obavezan"]
     }
 });
 

@@ -40,10 +40,9 @@ const createSendToken = (user, statusCode, res, refreshToken = null) => {
   user.refreshToken = undefined;
   user.refreshTokenExpires = undefined;
 
-  res.status(statusCode).json({
-    status: 'success',
-    data: user
-  });
+  const payload = { status: 'success', data: user, token };
+  if (refreshToken) payload.refreshToken = refreshToken;
+  res.status(statusCode).json(payload);
 };
 
 function stripRoleFields(body) {
@@ -119,11 +118,13 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
 
 exports.protect = (...allowedRoles) => {
   return catchAsync(async (req, res, next) => {
-    const token =
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-        ? req.headers.authorization.split(' ')[1]
-        : null;
+    let token = null;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.headers.cookie) {
+      const match = req.headers.cookie.match(/\bjwt=([^;]+)/);
+      if (match) token = match[1].trim();
+    }
 
     if (!token) {
       return next(new AppError('Please log in again', 401));

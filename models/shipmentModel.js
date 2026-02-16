@@ -1,101 +1,107 @@
-const mongoose=require('mongoose');
-const validator=require('validator');
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 const shipmentSchema=new mongoose.Schema({
     sender: {
-        userId:{
-            required: [true, "Sender is required"],
+        userId: {
+            required: [true, "Pošiljalac je obavezan"],
             type: mongoose.Schema.ObjectId,
             ref: "User"
         },
         name: {
             type: String,
-            required: [true, "Sender name is required"],
+            required: [true, "Ime pošiljaoca je obavezno"],
             trim: true
           },
-          email: {
+        email: {
             type: String,
-            required: [true, "Sender email is required"],
+            required: [true, "Email pošiljaoca je obavezan"],
             trim: true,
             lowercase: true,
             validate: {
               validator: (v) => validator.isEmail(v),
-              message: "Please provide a valid email address"
+              message: "Unesite ispravnu email adresu"
             }
           }
     },
     recipient: {
+        userId: {
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+            default: null
+        },
         email: {
             type: String,
             trim: true,
             lowercase: true,
-            minlength: [6, "Email must be at least 6 characters"],
-            maxlength: [254, "Email must be at most 254 characters"],
+            minlength: [6, "Email mora imati najmanje 6 karaktera"],
+            maxlength: [254, "Email može imati najviše 254 karaktera"],
             validate: {
                 validator: function (v) {
                     return validator.isEmail(v);
                 },
-                message: 'Please provide a valid email address'
+                message: 'Unesite ispravnu email adresu'
             }
         },
         name: {
             type:String,
-            required:[true, "Name is required"],
-            maxlength: [100, "Name must be at most 100 characters"],
+            required:[true, "Ime je obavezno"],
+            maxlength: [100, "Ime može imati najviše 100 karaktera"],
             trim: true,
             validate: {
                 validator: function (v) {
                     return /^[a-zA-Z\s]+$/.test(v);
                 },
-                message: 'Name must contain only letters and spaces'
+                message: 'Ime može sadržati samo slova i razmake'
             }
         },
         phoneNumber: {
             type: String,
-            required: [true, "Phone number is required"],
-            minlength: [8, "Phone number must be at least 8 characters"],
-            maxlength: [15, "Phone number must be at most 15 characters"],
+            required: [true, "Broj telefona je obavezan"],
+            minlength: [8, "Broj telefona mora imati najmanje 8 cifara"],
+            maxlength: [15, "Broj telefona može imati najviše 15 cifara"],
             validate: {
                 validator: function (v) {
                     return /^\d+$/.test(v);
                 },
+                message: 'Broj telefona može sadržati samo cifre'
             }
         },
         address: {
             type: String,
-            required: [true, "Address is required"],
-            maxlength: [100, "Address must be at most 100 characters"],
+            required: [true, "Adresa je obavezna"],
+            maxlength: [100, "Adresa može imati najviše 100 karaktera"],
             trim: true,
             validate: {
                 validator: function (v) {
                     return /^[a-zA-Z0-9\s]+$/.test(v);
                 },
-                message: 'Address must contain only letters, numbers and spaces'
+                message: 'Adresa može sadržati samo slova, brojeve i razmake'
             }
         },
         city: {
             type: String,
-            required: [true, "City is required"],
-            maxlength: [50, "City must be at most 50 characters"],
+            required: [true, "Grad je obavezan"],
+            maxlength: [50, "Grad može imati najviše 50 karaktera"],
             trim: true,
             validate: {
                 validator: function (v) {
                     return /^[a-zA-Z0-9\s]+$/.test(v);
                 },
-                message: 'City must contain only letters, numbers and spaces'
+                message: 'Grad može sadržati samo slova, brojeve i razmake'
             }
         },
         postalCode: {
             type: String,
-            required: [true, "Postal code is required"],
-            minlength: [3, "Postal code must be at least 3 characters"],
-            maxlength: [10, "Postal code must be at most 10 characters"],
+            required: [true, "Poštanski broj je obavezan"],
+            minlength: [3, "Poštanski broj mora imati najmanje 3 karaktera"],
+            maxlength: [10, "Poštanski broj može imati najviše 10 karaktera"],
             trim: true,
             validate: {
                 validator: function (v) {
                     return /^[a-zA-Z0-9\s\-]+$/.test(v);
                 },
-                message: 'Postal code must contain only letters, numbers, spaces and hyphen'
+                message: 'Poštanski broj može sadržati samo slova, brojeve, razmake i crticu'
             }
         }
     },
@@ -103,35 +109,35 @@ const shipmentSchema=new mongoose.Schema({
         courierId: {
             type: mongoose.Schema.ObjectId,
             ref: "Courier",
-            required: [true, "Courier is required"]
+            default: null
         },
         name: {
             type: String,
-            required: [true, "Courier name is required"],
-            trim: true
-          }
+            trim: true,
+            default: null
+        }
     },
     weight: {
         type: Number,
-        required: [true, "Weight is required"],
-        min: [1, "Weight must be at least 1"],
-        max: [1000000, "Weight must be at most 1000000"],
+        required: [true, "Težina je obavezna"],
+        min: [1, "Težina mora biti najmanje 1"],
+        max: [1000000, "Težina može biti najviše 1000000"],
         unit: {
             type: String,
-            required: [true, "Unit is required"],
+            required: [true, "Jedinica je obavezna"],
             enum: {
                 values: ['kg', 'g', 'mg', 'lb', 'oz'],
-                message: 'Unit must be one of: kg, g, mg, lb, oz'
+                message: 'Jedinica mora biti jedna od: kg, g, mg, lb, oz'
             },
         }
     },
     statuses: [{
         status: {
             type: String,
-            required: [true, 'Status is required'],
+            required: [true, 'Status je obavezan'],
             enum: {
-                values: ['Picked up', 'In transit', 'Delivered', 'Delivery failed', 'In warehouse'],
-                message: 'Status must be one of: Picked up, In transit, Delivered, Delivery failed, In warehouse'
+                values: ['Preuzimanje pošiljke', 'Pošiljka uneta u sistem', 'Pošiljka u lokalnom centru', 'Pošiljka u skladištu', 'Utovareno za dostavu', 'Isporučeno', 'Neuspela isporuka'],
+                message: 'Status mora da bude jedan od: Preuzimanje pošiljke, Pošiljka uneta u sistem, Pošiljka u lokalnom centru, Pošiljka u skladištu, Utovareno za dostavu, Isporučeno, Neuspela isporuka'
             },
             trim: true
         },

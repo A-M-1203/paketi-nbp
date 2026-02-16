@@ -11,6 +11,13 @@ module.exports.createBranch=catchAsync(async(req,res,next)=>{
     });
 });
 
+module.exports.getAllBranches=catchAsync(async(req,res,next)=>{
+    const branches=await Branch.find({});
+    res.status(200).json({
+        data:{ branches }
+    });
+});
+
 module.exports.getNearest=catchAsync(async(req,res,next)=>{
     const lng=parseFloat(req.query.lng);
     const lang=parseFloat(req.query.lang);

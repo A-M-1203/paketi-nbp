@@ -108,8 +108,19 @@
 
       if (res.ok) {
         showMessage('form-login', 'Uspešna prijava.', 'success');
+        try {
+          if (data.data && data.data._id) {
+            sessionStorage.setItem('user', JSON.stringify(data.data));
+          }
+          if (data.token) {
+            sessionStorage.setItem('token', data.token);
+          }
+          if (data.refreshToken) {
+            sessionStorage.setItem('refreshToken', data.refreshToken);
+          }
+        } catch (err) {}
         setTimeout(function () {
-          window.location.href = 'index.html';
+          window.location.href = 'posalji.html';
         }, 800);
         return;
       }

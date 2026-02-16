@@ -1,0 +1,151 @@
+/* Stranica Moji paketi – moji-paketi.html */
+
+.paketi-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.paketi-section h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: #2c3e50;
+}
+
+.paketi-intro {
+  margin: 0 0 1.5rem;
+  color: #7f8c8d;
+  font-size: 0.95rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  color: #7f8c8d;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover {
+  color: #2c3e50;
+}
+
+.tab-btn.active {
+  color: #2980b9;
+  border-bottom-color: #2980b9;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.loading {
+  padding: 1.5rem;
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.form-message.error {
+  background: #fadbd8;
+  color: #c0392b;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.paketi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.paket-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem;
+  border-left: 4px solid #2980b9;
+}
+
+.paket-card .card-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.paket-card .card-title {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem;
+}
+
+.paket-card .card-status {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.paket-card .card-status.delivered {
+  background: #d5f4e6;
+  color: #1e8449;
+}
+
+.paket-card .card-details {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #5d6d7e;
+  line-height: 1.5;
+}
+
+.paket-card .card-details p {
+  margin: 0.25rem 0;
+}
+
+.paket-card .card-details strong {
+  color: #2c3e50;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #7f8c8d;
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+.nav-active {
+  font-weight: 600;
+  color: #fff;
+}
+
+.nav-user {
+  margin-right: 0.5rem;
+  color: #ecf0f1;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pošalji paket – DevExpress</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/posalji.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">DevExpress</a>
+      <nav class="nav">
+        <span class="nav-user" id="nav-user"></span>
+        <a href="posalji.html" class="nav-active">Pošalji paket</a>
+        <a href="moji-paketi.html">Moji paketi</a>
+        <a href="#" id="nav-logout">Odjavi se</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="posalji-section">
+      <h1>Pošalji paket</h1>
+      <p class="posalji-intro">Unesite podatke o primaocu i pošiljci. Polja označena sa <em>*</em> su obavezna.</p>
+
+      <form id="form-posalji" class="posalji-form">
+        <fieldset class="form-block">
+          <legend>Podaci o primaocu</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="receipentFirst">Ime primaoca <em>*</em></label>
+              <input type="text" id="receipentFirst" name="receipentFirst" required maxlength="50" placeholder="npr. Petar" autocomplete="given-name">
+              <span class="field-error" id="receipentFirst-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="receipentLast">Prezime primaoca <em>*</em></label>
+              <input type="text" id="receipentLast" name="receipentLast" required maxlength="50" placeholder="npr. Petrović" autocomplete="family-name">
+              <span class="field-error" id="receipentLast-error"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="receipentEmail">Email primaoca <em>*</em></label>
+            <input type="email" id="receipentEmail" name="receipentEmail" required maxlength="254" placeholder="primalac@example.com" autocomplete="email">
+            <span class="field-error" id="receipentEmail-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Broj telefona primaoca <em>*</em></label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required minlength="8" maxlength="15" placeholder="npr. 0611234567" autocomplete="tel">
+            <span class="field-error" id="phoneNumber-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="address">Adresa <em>*</em></label>
+            <input type="text" id="address" name="address" required maxlength="100" placeholder="Ulica i broj" autocomplete="street-address">
+            <span class="field-error" id="address-error"></span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">Grad <em>*</em></label>
+              <input type="text" id="city" name="city" required maxlength="50" placeholder="npr. Beograd" autocomplete="address-level2">
+              <span class="field-error" id="city-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="postalCode">Poštanski broj <em>*</em></label>
+              <input type="text" id="postalCode" name="postalCode" required minlength="3" maxlength="10" placeholder="npr. 11000" autocomplete="postal-code">
+              <span class="field-error" id="postalCode-error"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend>Podaci o pošiljci</legend>
+          <div class="form-row form-row-weight">
+            <div class="form-group">
+              <label for="weight">Težina <em>*</em></label>
+              <input type="number" id="weight" name="weight" required min="1" max="1000000" step="0.01" placeholder="npr. 2.5">
+              <span class="field-error" id="weight-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="weightUnit">Jedinica <em>*</em></label>
+              <select id="weightUnit" name="weightUnit" required>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="btn-submit">Pošalji paket</button>
+        </div>
+        <div id="posalji-message" class="form-message"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <a href="index.html">Početna</a>
+      <a href="auth.html?mode=login">Prijava</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/authFetch.js"></script>
+  <script src="js/posalji.js"></script>
+</body>
+</html>

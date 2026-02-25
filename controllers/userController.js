@@ -38,6 +38,47 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (!user || !user.isActive) {
+    return next(new AppError('No user found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: { user }
+  });
+});
+
+const ALLOWED_UPDATE_FIELDS = [
+  'firstName', 'lastName', 'companyName', 'taxId',
+  'phoneNumber', 'city', 'address', 'postalCode'
+];
+
+exports.updateMe = catchAsync(async (req, res, next) => {
+  const body = {};
+  ALLOWED_UPDATE_FIELDS.forEach((field) => {
+    if (req.body[field] !== undefined) body[field] = req.body[field];
+  });
+  if (req.user.role === 'fizicko lice') {
+    delete body.companyName;
+    delete body.taxId;
+  } else {
+    delete body.firstName;
+    delete body.lastName;
+  }
+  const user = await User.findByIdAndUpdate(req.user.id, body, {
+    new: true,
+    runValidators: true
+  });
+  if (!user) {
+    return next(new AppError('No user found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: { user }
+  });
+});
+
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 

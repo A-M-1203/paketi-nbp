@@ -8,7 +8,7 @@ const branchSchema = new mongoose.Schema({
         trim: true,
         validate: {
             validator: function (v) {
-            return /^[a-zA-Z0-9\s]+$/.test(v);
+                return /^[\p{L}\p{N}\s]+$/u.test(v);
             },
             message: 'Naziv može sadržati samo slova, brojeve i razmake'
         }
@@ -20,7 +20,7 @@ const branchSchema = new mongoose.Schema({
         trim: true,
         validate: {
             validator: function (v) {
-            return /^[a-zA-Z0-9\s]+$/.test(v);
+                return /^[\p{L}\p{N}\s]+$/u.test(v);
             },
             message: 'Adresa može sadržati samo slova, brojeve i razmake'
         }

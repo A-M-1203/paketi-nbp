@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z\s]+$/.test(v);
+          return /^[\p{L}\s]+$/u.test(v);
         },
         message: 'Ime može sadržati samo slova i razmake'
       }
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z\s]+$/.test(v);
+          return /^[\p{L}\s]+$/u.test(v);
         },
         message: 'Prezime može sadržati samo slova i razmake'
       }
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z0-9\s]+$/.test(v);
+          return /^[\p{L}\p{N}\s]+$/u.test(v);
         },
         message: 'Naziv firme može sadržati samo slova, brojeve i razmake'
       }
@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z0-9\s]+$/.test(v);
+          return /^[\p{L}\p{N}\s]+$/u.test(v);
         },
         message: 'Naziv grada može sadržati samo slova, brojeve i razmake'
       }
@@ -103,7 +103,7 @@ const userSchema = new mongoose.Schema({
       trim: true,
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z0-9\s]+$/.test(v);
+          return /^[\p{L}\p{N}\s]+$/u.test(v);
         },
         message: 'Adresa može sadržati samo slova, brojeve i razmake'
       }

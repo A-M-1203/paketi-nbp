@@ -1,0 +1,53 @@
+.profil-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.profil-section h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: #2c3e50;
+}
+
+.profil-intro {
+  margin: 0 0 1.5rem;
+  color: #7f8c8d;
+  font-size: 0.95rem;
+}
+
+.profil-podaci {
+  margin-bottom: 2.5rem;
+}
+
+.profil-podaci h2,
+.profil-paketi h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: #2c3e50;
+}
+
+.profil-form {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+.form-group input.readonly {
+  background: #ecf0f1;
+  color: #5d6d7e;
+  cursor: default;
+}
+
+.profil-paketi .tabs {
+  margin-bottom: 1rem;
+}
+
+.profil-paketi .loading {
+  margin-bottom: 1rem;
+}
+
+.profil-paketi .form-message.error {
+  margin-bottom: 1rem;
+}

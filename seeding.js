@@ -1,73 +1,73 @@
-const mongoose = require('mongoose');
-const Branch=require('./models/branchModel');
-const dotenv = require('dotenv');
+const mongoose = require("mongoose");
+const Branch = require("./models/branchModel");
+const dotenv = require("dotenv");
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: "./config.env" });
 
 const DB = process.env.DATABASE.replace(
-    '<PASSWORD>',
-    process.env.DATABASE_PASSWORD
-  );
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD,
+);
 
-mongoose.connect(DB).then((con) => console.log('DB connection successful'));
+mongoose.connect(DB).then((con) => console.log("DB connection successful"));
 
-const branches=[
-    {
-      "name": "Branch 01",
-      "address": "Near point N (~780m)",
-      "location": { "type": "Point", "coordinates": [21.9023, 43.3335] }
-    },
-    {
-      "name": "Branch 02",
-      "address": "Near point S (~780m)",
-      "location": { "type": "Point", "coordinates": [21.9023, 43.3195] }
-    },
-    {
-      "name": "Branch 03",
-      "address": "Near point E (~730m)",
-      "location": { "type": "Point", "coordinates": [21.9113, 43.3265] }
-    },
-    {
-      "name": "Branch 04",
-      "address": "Near point W (~730m)",
-      "location": { "type": "Point", "coordinates": [21.8933, 43.3265] }
-    },
-    {
-      "name": "Branch 05",
-      "address": "Near point NE (~790m)",
-      "location": { "type": "Point", "coordinates": [21.9093, 43.3315] }
-    },
-    {
-      "name": "Branch 06",
-      "address": "Near point NW (~790m)",
-      "location": { "type": "Point", "coordinates": [21.8953, 43.3315] }
-    },
-    {
-      "name": "Branch 07",
-      "address": "Near point SE (~790m)",
-      "location": { "type": "Point", "coordinates": [21.9093, 43.3215] }
-    },
-    {
-      "name": "Branch 08",
-      "address": "Near point SW (~790m)",
-      "location": { "type": "Point", "coordinates": [21.8953, 43.3215] }
-    },
-    {
-      "name": "Branch 09",
-      "address": "Near point NNE (~920m)",
-      "location": { "type": "Point", "coordinates": [21.9053, 43.3345] }
-    },
-    {
-      "name": "Branch 10",
-      "address": "Near point SSW (~950m)",
-      "location": { "type": "Point", "coordinates": [21.8983, 43.3185] }
-    }
-  ];
+const branches = [
+  {
+    name: "Užice 1",
+    address: "Dimitrija Tucovica 3",
+    location: { type: "Point", coordinates: [43.855, 19.8425] },
+  },
+  {
+    name: "Leskovac 1",
+    address: "Bulevar Oslobodjenja 7",
+    location: { type: "Point", coordinates: [42.9981, 21.9465] },
+  },
+  {
+    name: "Kraljevo 1",
+    address: "Trg srpskih ratnika 3",
+    location: { type: "Point", coordinates: [43.7258, 20.6897] },
+  },
+  {
+    name: "Čačak 1",
+    address: "Gospodar Jovanova 10",
+    location: { type: "Point", coordinates: [43.8914, 20.3497] },
+  },
+  {
+    name: "Zrenjanin 1",
+    address: "Kralja Aleksandra I Karađorđevića 3",
+    location: { type: "Point", coordinates: [45.3814, 20.3861] },
+  },
+  {
+    name: "Subotica 1",
+    address: "Korzo 20",
+    location: { type: "Point", coordinates: [46.1005, 19.665] },
+  },
+  {
+    name: "Kragujevac 1",
+    address: "Kralja Aleksandra I Karađorđevića 2",
+    location: { type: "Point", coordinates: [44.0128, 20.9114] },
+  },
+  {
+    name: "Beograd 1",
+    address: "Knez Mihailova 22",
+    location: { type: "Point", coordinates: [44.8125, 20.4612] },
+  },
+  {
+    name: "Novi Sad 1",
+    address: "Zmaj Jovina 11",
+    location: { type: "Point", coordinates: [45.2671, 19.8335] },
+  },
+  {
+    name: "Niš 1",
+    address: "Obrenovićeva 56",
+    location: { type: "Point", coordinates: [43.3209, 21.8958] },
+  },
+];
 
-async function seed(){
-    await Branch.deleteMany();
-    await Branch.insertMany(branches);
-    mongoose.connection.close();
+async function seed() {
+  await Branch.deleteMany();
+  await Branch.insertMany(branches);
+  mongoose.connection.close();
 }
 
 seed();

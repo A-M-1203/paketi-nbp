@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moj profil – DevExpress</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/posalji.css">
+  <link rel="stylesheet" href="css/moji-paketi.css">
+  <link rel="stylesheet" href="css/profil.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">DevExpress</a>
+      <nav class="nav">
+        <span class="nav-user" id="nav-user"></span>
+        <a href="posalji.html">Pošalji paket</a>
+        <a href="moji-paketi.html">Moji paketi</a>
+        <a href="profil.html" class="nav-active">Profil</a>
+        <a href="#" id="nav-logout">Odjavi se</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="profil-section">
+      <h1>Moj profil</h1>
+      <p class="profil-intro">Pregled i izmena vaših podataka, kao i pregled poslatih i primljenih paketa.</p>
+
+      <div class="profil-podaci">
+        <h2>Moji podaci</h2>
+        <form id="form-profil" class="profil-form">
+          <fieldset class="form-block">
+            <legend>Osnovni podaci</legend>
+            <div class="form-group">
+              <label>Uloga</label>
+              <input type="text" id="role" readonly disabled class="readonly">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="email" readonly disabled class="readonly">
+            </div>
+            <div id="form-fizicko" class="form-row" style="display: none;">
+              <div class="form-group">
+                <label for="firstName">Ime <em>*</em></label>
+                <input type="text" id="firstName" name="firstName" maxlength="50" placeholder="Ime">
+                <span class="field-error" id="firstName-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Prezime <em>*</em></label>
+                <input type="text" id="lastName" name="lastName" maxlength="50" placeholder="Prezime">
+                <span class="field-error" id="lastName-error"></span>
+              </div>
+            </div>
+            <div id="form-pravno" class="form-row" style="display: none;">
+              <div class="form-group">
+                <label for="companyName">Naziv firme <em>*</em></label>
+                <input type="text" id="companyName" name="companyName" maxlength="100" placeholder="Naziv firme">
+                <span class="field-error" id="companyName-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="taxId">PIB <em>*</em></label>
+                <input type="text" id="taxId" name="taxId" minlength="5" maxlength="25" placeholder="PIB">
+                <span class="field-error" id="taxId-error"></span>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-block">
+            <legend>Kontakt i adresa</legend>
+            <div class="form-group">
+              <label for="phoneNumber">Broj telefona <em>*</em></label>
+              <input type="tel" id="phoneNumber" name="phoneNumber" minlength="8" maxlength="15" placeholder="npr. 0611234567">
+              <span class="field-error" id="phoneNumber-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="address">Adresa <em>*</em></label>
+              <input type="text" id="address" name="address" maxlength="100" placeholder="Ulica i broj">
+              <span class="field-error" id="address-error"></span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Grad <em>*</em></label>
+                <input type="text" id="city" name="city" maxlength="50" placeholder="npr. Beograd">
+                <span class="field-error" id="city-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="postalCode">Poštanski broj <em>*</em></label>
+                <input type="text" id="postalCode" name="postalCode" minlength="3" maxlength="10" placeholder="npr. 11000">
+                <span class="field-error" id="postalCode-error"></span>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-save">Sačuvaj izmene</button>
+          </div>
+          <div id="profil-message" class="form-message"></div>
+        </form>
+      </div>
+
+      <div class="profil-paketi">
+        <h2>Moji paketi</h2>
+        <div class="tabs">
+          <button type="button" id="tab-poslati" class="tab-btn active">Poslati</button>
+          <button type="button" id="tab-primljeni" class="tab-btn">Za mene</button>
+        </div>
+        <div id="loading-paketi" class="loading hidden">Učitavanje…</div>
+        <div id="error-paketi" class="form-message error hidden"></div>
+        <div id="panel-poslati" class="panel active">
+          <div id="list-poslati" class="paketi-list"></div>
+          <p id="empty-poslati" class="empty-msg hidden">Nema poslatih paketa.</p>
+        </div>
+        <div id="panel-primljeni" class="panel">
+          <div id="list-primljeni" class="paketi-list"></div>
+          <p id="empty-primljeni" class="empty-msg hidden">Nema paketa za vas.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <a href="index.html">Početna</a>
+      <a href="posalji.html">Pošalji paket</a>
+      <a href="moji-paketi.html">Moji paketi</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/authFetch.js"></script>
+  <script src="js/profil.js"></script>
+</body>
+</html>

@@ -3,8 +3,8 @@ const authController=require('../controllers/authController');
 const shipmentControllers=require('../controllers/shipmentController');
 
 const router=express.Router();
-
-router.route("/").post(authController.protect('fizicko lice', 'pravno lice'), shipmentControllers.createShipment).put(shipmentControllers.updateShipment).delete(shipmentControllers.deleteShipment);
+//Sad samo ulogovani user može da brise
+router.route("/").post(authController.protect('fizicko lice', 'pravno lice'), shipmentControllers.createShipment).put(shipmentControllers.updateShipment).delete(authController.protect('fizicko lice', 'pravno lice'), shipmentControllers.deleteShipment);
 
 router.route("/finished").get(authController.protect('fizicko lice', 'pravno lice'), shipmentControllers.getShipmentsFinished).put(shipmentControllers.finishShipment);
 
@@ -15,7 +15,7 @@ router.route("/my-received").get(authController.protect('fizicko lice', 'pravno 
 
 router.route("/getCouirierShip").get(shipmentControllers.getBasenOnCourier);
 
-router.route("/status").put(shipmentControllers.addStatus);
+router.route("/status").put(authController.protectCourier, shipmentControllers.addStatus);
 
 router.route("/assign").put(shipmentControllers.setBranchId);
 

@@ -34,14 +34,13 @@ module.exports.createShipment = catchAsync(async (req,res,next) => {
         confirmUsed: false,
         confirmToken: crypto.randomBytes(16).toString("hex")
     };
-    if (req.body.couirerId) {
-        const courier = await Courier.findOne({ _id: req.body.couirerId });
-        if (courier) {
-            shipmentData.courier = {
-                courierId: courier._id,
-                name: courier.fullName
-            };
-        }
+    //promenio da "automatski pronadje kurira, napravicemo jednog samo za testiranje "
+    const courier = await Courier.findOne({ status: true });
+    if (courier) {
+        shipmentData.courier = {
+            courierId: courier._id,
+            name: courier.fullName
+        };
     }
     const recipientUser = await User.findOne({ email: (req.body.receipentEmail || '').toLowerCase().trim(), isActive: { $ne: false } });
     if (recipientUser) {
@@ -54,7 +53,7 @@ module.exports.createShipment = catchAsync(async (req,res,next) => {
             shipment:newShipment
         }
     });
-    mailSender(req.body.receipentEmail,"Status update",JSON.stringify(newShipment));
+    mailSender(req.body.receipentEmail,"Status update",JSON.stringify(newShipment)).catch(()=>{});
 });
 
 module.exports.getShipmentsFinished=catchAsync(async (req,res,next)=>{
@@ -102,7 +101,7 @@ module.exports.finishShipment = catchAsync(async (req,res,next) => {
         res.status(200).json({
             status:"success"
         });
-        mailSender(shipment.recipient.email,"Status update",JSON.stringify(shipment));
+        mailSender(shipment.recipient.email,"Status update",JSON.stringify(shipment)).catch(()=>{});
     }
     else{
         res.status(400).json({
@@ -121,30 +120,39 @@ module.exports.updateShipment = catchAsync(async (req,res,next) => {
         }
     });
 });
-
+//IZMENJANA FUNKCIJA za kurira da moze da menja status posiljke 
 module.exports.addStatus = catchAsync(async (req,res,next) => {
-    await Shipment.updateOne({_id:req.body._id},{$push:{statuses:{status:req.body.status,dateTime:new Date()}}});
-    const shipment=await Shipment.findById(req.body._id);
-    res.status(200).json({
-        data:{
-            shipment
-        }
-    });
-    mailSender(shipment.recipient.email,"Status update",JSON.stringify(shipment));
-});
+    const shipment = await Shipment.findById(req.body._id);
 
+    if (!shipment) {
+        return res.status(404).json({ message: 'Pošiljka nije pronađena' });
+    }
+
+    if (!shipment.courier.courierId || shipment.courier.courierId.toString() !== req.courier._id.toString()) {
+        return res.status(403).json({ message: 'Niste dodeljeni ovoj pošiljci' });
+    }
+
+    await Shipment.updateOne({ _id: req.body._id }, { $push: { statuses: { status: req.body.status, dateTime: new Date() } } });
+    const updated = await Shipment.findById(req.body._id);
+
+    res.status(200).json({ data: { shipment: updated } });
+    mailSender(updated.recipient.email, "Status update", JSON.stringify(updated)).catch(()=>{});
+});
+// provera da li mu pripada posljika i brisanje
 module.exports.deleteShipment = catchAsync(async (req,res,next) => {
-    const result = await Shipment.deleteOne({_id:req.body._id});
-    if(result.deletedCount){
-        res.status(204).json({
-            message:"Pošiljka je obrisana"
-        });
+    const shipment = await Shipment.findById(req.body._id);
+
+    if (!shipment) {
+        return res.status(404).json({ message: 'Pošiljka nije pronađena' });
     }
-    else{
-        res.status(401).json({
-            message:"Pošiljka nije pronađena"
-        });
+
+    if (shipment.sender.userId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ message: 'Nemate pravo da obrišete ovu pošiljku' });
     }
+
+    await Shipment.deleteOne({ _id: req.body._id });
+
+    res.status(200).json({ message: 'Pošiljka je obrisana' });
 });
 
 module.exports.getBasenOnCourier = catchAsync(async (req,res,next) => {

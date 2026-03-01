@@ -71,29 +71,38 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password', 400));
-  }
+    if (!email || !password) {
+      return next(new AppError('Please provide email and password', 400));
+    }
 
-  const user = await User.findOne({ email, isActive: { $ne: false } }).select(
-    '+password'
-  );
+    const user = await User.findOne({ email, isActive: { $ne: false } }).select('+password');
 
-  if (!user || !(await user.correctPassword(password))) {
-    return next(new AppError('Incorrect email or password', 401));
-  }
+    if (user && (await user.correctPassword(password))) {
+      const refreshToken = crypto.randomBytes(8).toString('hex');
+      user.refreshToken = refreshToken;
+      user.refreshTokenExpires = new Date(
+        Date.now() + process.env.REFRESH_TOKEN_EXPIRES_IN * 24 * 60 * 60 * 1000
+      );
+      await user.save({ validateBeforeSave: false });
+      return createSendToken(user, 200, res, refreshToken);
+    }
 
-  const refreshToken = crypto.randomBytes(8).toString('hex');
-  user.refreshToken = refreshToken;
-  user.refreshTokenExpires = new Date(
-    Date.now() +
-      process.env.REFRESH_TOKEN_EXPIRES_IN * 24 * 60 * 60 * 1000
-  );
-  await user.save({ validateBeforeSave: false });
+    const Courier = require('../models/courierModel');
+    const bcrypt = require('bcrypt');
+    const courier = await Courier.findOne({ email });
 
-  createSendToken(user, 200, res, refreshToken);
+    if (!courier || !courier.password || !(await bcrypt.compare(password, courier.password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    const token = createToken(courier._id, 'kurir');
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: courier
+    });
 });
 
 exports.refreshToken = catchAsync(async (req, res, next) => {
@@ -165,7 +174,42 @@ exports.protect = (...allowedRoles) => {
       );
     }
 
-    req.user = user;
+  req.user = user;
     next();
   });
 };
+
+exports.protectCourier = catchAsync(async (req, res, next) => {
+      let token = null;
+      if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+          token = req.headers.authorization.split(' ')[1];
+      } else if (req.headers.cookie) {
+          const match = req.headers.cookie.match(/\bjwt=([^;]+)/);
+          if (match) token = match[1].trim();
+      }
+
+      if (!token) {
+          return next(new AppError('Kurir autentifikacija je obavezna', 401));
+      }
+
+      let decoded;
+      try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+          return next(new AppError('Nevažeći token', 401));
+      }
+
+      if (decoded.role !== 'kurir') {
+          return next(new AppError('Nemate pravo pristupa', 403));
+      }
+
+      const Courier = require('../models/courierModel');
+      const courier = await Courier.findById(decoded.id);
+
+      if (!courier) {
+          return next(new AppError('Kurir nije pronađen', 401));
+      }
+
+      req.courier = courier;
+      next();
+});

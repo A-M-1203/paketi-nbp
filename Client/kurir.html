@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurir – DevExpress</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/moji-paketi.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">DevExpress</a>
+      <nav class="nav">
+        <span class="nav-user" id="nav-user"></span>
+        <a href="#" id="nav-logout">Odjavi se</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="paketi-section">
+      <h1>Moje pošiljke</h1>
+      <p class="paketi-intro">Pošiljke dodeljene vama.</p>
+
+      <div id="loading" class="loading hidden">Učitavanje…</div>
+      <div id="error-msg" class="form-message error hidden"></div>
+
+      <div id="list-posiljke" class="paketi-list"></div>
+      <p id="empty-msg" class="empty-msg hidden">Nema dodeljenih pošiljki.</p>
+
+      <div id="status-form" class="hidden" style="margin-top:20px; padding:20px; background:#f5f5f5; border-radius:8px;">
+        <h3>Promeni status pošiljke</h3>
+        <p>ID: <strong id="selected-id"></strong></p>
+        <select id="status-select" style="width:100%; padding:8px; margin:10px 0;">
+          <option value="Preuzimanje pošiljke">Preuzimanje pošiljke</option>
+          <option value="Pošiljka u lokalnom centru">Pošiljka u lokalnom centru</option>
+          <option value="Pošiljka u skladištu">Pošiljka u skladištu</option>
+          <option value="Utovareno za dostavu">Utovareno za dostavu</option>
+          <option value="Neuspela isporuka">Neuspela isporuka</option>
+        </select>
+        <button class="btn btn-primary" id="btn-potvrdi">Potvrdi</button>
+        <button class="btn" id="btn-otkazi" style="margin-left:10px; background:#aaa;">Otkaži</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <a href="index.html">Početna</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/authFetch.js"></script>
+  <script src="js/kurir.js"></script>
+</body>
+</html>

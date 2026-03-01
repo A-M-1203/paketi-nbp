@@ -149,3 +149,18 @@
   color: #ecf0f1;
   font-size: 0.9rem;
 }
+
+.btn-obrisi {
+  margin-top: 10px;
+  padding: 6px 14px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-obrisi:hover {
+  background-color: #c0392b;
+}

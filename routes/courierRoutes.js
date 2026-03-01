@@ -17,4 +17,7 @@ router.route("/changeStatus")
 router.route("/rate")
 .put(courierController.rateCourier);
 
+router.route("/login")
+.post(courierController.courierLogin);
+
 module.exports=router;

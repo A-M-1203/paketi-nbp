@@ -1,5 +1,7 @@
 const mongoose=require('mongoose');
 
+const bcrypt = require('bcrypt');
+
 
 const courierSchema=new mongoose.Schema({
     fullName:{
@@ -32,7 +34,26 @@ const courierSchema=new mongoose.Schema({
     region:{
         type:String,
         required:[true,"Region je obavezan"]
+    },
+    //dodato zbg login za kurira
+    accessToken: {
+        type: String,
+        default: null
+    },
+    email: {
+        type: String,
+        trim: true,
+        lowercase: true
+    },
+    password: {
+        type: String
     }
+});
+
+courierSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
 });
 
 module.exports=mongoose.model("Courier",courierSchema);

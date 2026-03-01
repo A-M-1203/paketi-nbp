@@ -119,8 +119,12 @@
             sessionStorage.setItem('refreshToken', data.refreshToken);
           }
         } catch (err) {}
-        setTimeout(function () {
-          window.location.href = 'posalji.html';
+       setTimeout(function () {
+          if (data.data && data.data.region) {
+            window.location.href = 'kurir.html';
+          } else {
+            window.location.href = 'posalji.html';
+          }
         }, 800);
         return;
       }

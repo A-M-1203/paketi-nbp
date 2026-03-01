@@ -64,9 +64,10 @@
         (addrLine ? '<p><strong>Adresa:</strong> ' + escapeHtml(addrLine) + '</p>' : '') +
         '<p><strong>Težina:</strong> ' + escapeHtml(String(weight)) + ' ' + escapeHtml(unit) + '</p>' +
         (latest.dateTime ? '<p><strong>Poslednji status:</strong> ' + formatDate(latest.dateTime) + '</p>' : '') +
-      '</div>';
-    return card;
-  }
+      '</div>' +
+    (isSent ? '<button class="btn-obrisi" data-id="' + shipment._id + '">Obriši</button>' : '');
+        return card;
+      }
 
   function escapeHtml(text) {
     if (text == null) return '';
@@ -182,8 +183,31 @@
     }
     renderList('list-poslati', 'empty-poslati', sentShipments, true);
     renderList('list-primljeni', 'empty-primljeni', receivedShipments, false);
+    // logika za klik na dugme obrisi
   }).catch(function (err) {
-    showLoading(false);
-    showError('Greška u mreži. Pokušajte ponovo.');
+      showLoading(false);
+      showError('Greška u mreži. Pokušajte ponovo.');
+    });
+
+  document.getElementById('list-poslati').addEventListener('click', function (e) {
+    if (!e.target.classList.contains('btn-obrisi')) return;
+    var id = e.target.getAttribute('data-id');
+    if (!confirm('Da li ste sigurni da želite da obrišete ovu pošiljku?')) return;
+
+    fetchFn(API_BASE + '/shipment', {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _id: id })
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (data.message === 'Pošiljka je obrisana') {
+        sentShipments = sentShipments.filter(function (s) { return s._id !== id; });
+        renderList('list-poslati', 'empty-poslati', sentShipments, true);
+      } else {
+        alert(data.message || 'Greška pri brisanju.');
+      }
+    }).catch(function () {
+      alert('Greška u mreži.');
+    });
   });
 })();

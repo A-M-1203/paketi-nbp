@@ -68,3 +68,22 @@ exports.deleteCourier=catchAsync(async(req,res,next)=>{
         });
     }
 })
+//dodato za login
+exports.courierLogin = catchAsync(async (req, res, next) => {
+    const { courierId, accessToken } = req.body;
+
+    if (!courierId || !accessToken) {
+        return res.status(400).json({ message: 'courierId i accessToken su obavezni' });
+    }
+
+    const courier = await Courier.findOne({ _id: courierId, accessToken: accessToken });
+
+    if (!courier) {
+        return res.status(401).json({ message: 'Pogrešan kurir ID ili token' });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: { courier }
+    });
+});

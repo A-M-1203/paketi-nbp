@@ -66,30 +66,28 @@ const branches = [
   },
 ];
 
+const couriers = [
+  {
+    fullName: "Marko Markovic",
+    phone: "0641234567",
+    vehicle: { type: "auto", plateNumber: "BG-123-AB" },
+    status: true,
+    region: "Beograd",
+    email: "marko@kurir.com",
+    password: bcrypt.hashSync("marko123", 12),
+  },
+  {
+    fullName: "Petar Petrovic",
+    phone: "0651234567",
+    vehicle: { type: "auto", plateNumber: "NS-456-CD" },
+    status: true,
+    region: "Novi Sad",
+    email: "petar@kurir.com",
+    password: bcrypt.hashSync("petar123", 12),
+  },
+];
+
 async function seed() {
-  const hashedPassword = await bcrypt.hash("kurir123", 12);
-
-  const couriers = [
-    {
-      fullName: "Marko Markovic",
-      phone: "0641234567",
-      vehicle: { type: "auto", plateNumber: "BG-123-AB" },
-      status: true,
-      region: "Beograd",
-      email: "marko@kurir.com",
-      password: hashedPassword
-    },
-    {
-      fullName: "Petar Petrovic",
-      phone: "0651234567",
-      vehicle: { type: "auto", plateNumber: "NS-456-CD" },
-      status: true,
-      region: "Novi Sad",
-      email: "petar@kurir.com",
-      password: hashedPassword
-    }
-  ];
-
   await Branch.deleteMany();
   await Branch.insertMany(branches);
   await Courier.deleteMany();

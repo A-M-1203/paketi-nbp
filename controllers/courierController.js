@@ -1,89 +1,116 @@
-const Courier=require("../models/courierModel");
-const catchAsync = require('../utils/catchAsync');
+const Courier = require("../models/courierModel");
+const catchAsync = require("../utils/catchAsync");
 
-exports.createCourier=catchAsync(async (req,res,next)=>{
-    const newCourier=await Courier.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        data: {
-          courier: newCourier
-        }
-      });
+exports.createCourier = catchAsync(async (req, res, next) => {
+  const newCourier = await Courier.create(req.body);
+  res.status(201).json({
+    status: "success",
+    data: {
+      courier: newCourier,
+    },
+  });
 });
 
-exports.findCouriersByStatusAndRegion=catchAsync(async (req,res,next)=>{
-     const couriers=await Courier.find({status:true,region:req.params.region});
-     res.status(200).json({
-        status: 'success',
-        results: couriers.length,
-        data: {
-          couriers
-        }
-      });
+exports.getAllCouriers = catchAsync(async (req, res, next) => {
+  const couriers = await Courier.find({ status: true }).select(
+    "_id fullName region",
+  );
+  res.status(200).json({
+    status: "success",
+    results: couriers.length,
+    data: {
+      couriers,
+    },
+  });
 });
 
-
-exports.rateCourier=catchAsync(async(req,res,next)=>{
-    const result=await Courier.updateOne({_id:req.body.courierId,"ratings.email":req.body.email},{$set:{"ratings.$.rate":req.body.rate}});
-    if(result.matchedCount===0){
-        await Courier.updateOne({_id:req.body.courierId},{$push:{ratings:{email:req.body.email,rate:req.body.rate}}});
-    }
-    const courier=await Courier.findOne({_id:req.body.courierId});
-    res.status(200).json({
-        data: {
-          courier
-        }
-      });
+exports.findCouriersByStatusAndRegion = catchAsync(async (req, res, next) => {
+  const couriers = await Courier.find({
+    status: true,
+    region: req.params.region,
+  });
+  res.status(200).json({
+    status: "success",
+    results: couriers.length,
+    data: {
+      couriers,
+    },
+  });
+});
+exports.rateCourier = catchAsync(async (req, res, next) => {
+  const result = await Courier.updateOne(
+    { _id: req.body.courierId, "ratings.email": req.body.email },
+    { $set: { "ratings.$.rate": req.body.rate } },
+  );
+  if (result.matchedCount === 0) {
+    await Courier.updateOne(
+      { _id: req.body.courierId },
+      { $push: { ratings: { email: req.body.email, rate: req.body.rate } } },
+    );
+  }
+  const courier = await Courier.findOne({ _id: req.body.courierId });
+  res.status(200).json({
+    data: {
+      courier,
+    },
+  });
 });
 
-exports.changeStatus=catchAsync(async(req,res,next)=>{
-    const courier=await Courier.findOneAndUpdate({_id:req.body.courierId},{$set:{status:{$not:"$status"}}});
-    res.status(200).json({
-        data:{
-            courier
-        }
+exports.changeStatus = catchAsync(async (req, res, next) => {
+  const courier = await Courier.findOneAndUpdate(
+    { _id: req.body.courierId },
+    { $set: { status: { $not: "$status" } } },
+  );
+  res.status(200).json({
+    data: {
+      courier,
+    },
+  });
+});
+
+exports.updateCourier = catchAsync(async (req, res, next) => {
+  await Courier.updateOne({ _id: req.body._id }, req.body);
+  const courier = await Courier.findById(req.body._id);
+  res.status(200).json({
+    data: {
+      courier,
+    },
+  });
+});
+
+exports.deleteCourier = catchAsync(async (req, res, next) => {
+  const result = await Courier.deleteOne({ _id: req.body._id });
+  if (result.deletedCount) {
+    res.status(204).json({
+      message: "Deleted",
     });
-});
-
-exports.updateCourier=catchAsync(async(req,res,next)=>{
-    await Courier.updateOne({_id:req.body._id},req.body);
-    const courier=await Courier.findById(req.body._id);
-    res.status(200).json({
-        data:{
-            courier
-        }
+  } else {
+    res.status(401).json({
+      message: "Given courier doesn't exist",
     });
+  }
 });
 
-exports.deleteCourier=catchAsync(async(req,res,next)=>{
-    const result=await Courier.deleteOne({_id:req.body._id});
-    if(result.deletedCount){
-        res.status(204).json({
-            message:"Deleted"
-        });
-    }
-    else{
-        res.status(401).json({
-            message:"Given courier doesn't exist"
-        });
-    }
-})
-//dodato za login
 exports.courierLogin = catchAsync(async (req, res, next) => {
-    const { courierId, accessToken } = req.body;
+  const { courierId, accessToken } = req.body;
 
-    if (!courierId || !accessToken) {
-        return res.status(400).json({ message: 'courierId i accessToken su obavezni' });
-    }
+  if (!courierId || !accessToken) {
+    return res
+      .status(400)
+      .json({ message: "courierId i accessToken su obavezni" });
+  }
 
-    const courier = await Courier.findOne({ _id: courierId, accessToken: accessToken });
+  const courier = await Courier.findOne({
+    _id: courierId,
+    accessToken: accessToken,
+  });
 
-    if (!courier) {
-        return res.status(401).json({ message: 'Pogrešan kurir ID ili token' });
-    }
+  if (!courier) {
+    return res.status(401).json({ message: "Pogrešan kurir ID ili token" });
+  }
 
-    res.status(200).json({
-        status: 'success',
-        data: { courier }
-    });
+  res.status(200).json({
+    status: "success",
+    data: { courier },
+  });
 });

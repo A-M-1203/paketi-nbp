@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dispečer – DevExpress</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/moji-paketi.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">DevExpress</a>
+      <nav class="nav">
+        <span class="nav-user" id="nav-user"></span>
+        <a href="#" id="nav-logout">Odjavi se</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="paketi-section">
+      <h1>Sve pošiljke</h1>
+      <p class="paketi-intro">Pregled svih pošiljaka i dodela kurira pošiljkama koje još nemaju kurira.</p>
+
+      <div id="loading" class="loading hidden">Učitavanje…</div>
+      <div id="error-msg" class="form-message error hidden"></div>
+
+      <div id="list-posiljke" class="paketi-list"></div>
+      <p id="empty-msg" class="empty-msg hidden">Nema pošiljaka.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <a href="index.html">Početna</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/authFetch.js"></script>
+  <script src="js/dispecer.js"></script>
+</body>
+</html>

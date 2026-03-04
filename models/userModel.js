@@ -120,7 +120,7 @@ const userSchema = new mongoose.Schema({
       },
       validate: {
         validator: function (v) {
-          return /^[a-zA-Z0-9\s\-]+$/.test(v);
+          return /^[\p{L}\p{N}\s\-]+$/u.test(v);
         },
         message: 'Poštanski broj može sadržati samo slova, brojeve, razmake i crticu'
       }

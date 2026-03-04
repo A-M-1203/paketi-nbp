@@ -4,11 +4,37 @@ services:
     container_name: paketi-nbp-mongodb
     restart: unless-stopped
     ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      MONGO_INITDB_DATABASE: paketi_nbp
+      
+"27017:27017"
+  volumes:
+mongodb_data:/data/db
+environment:
+  MONGO_INITDB_DATABASE: paketi_nbp
+
+  nodeapp:
+    build: .
+    image: paketi-nbp-node
+    container_name: paketi-nbp-node
+    restart: unless-stopped
+    depends_on:
+      
+mongodb
+  ports:
+"3000:3000"
+environment:
+  NODE_ENV: development
+  PORT: 3000
+  DATABASE: mongodb://mongodb:27017/paketi_nbp
+  JWT_SECRET: ${JWT_SECRET:-my-ultra-secure-and-ultra-long-secret}
+  JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-5m}
+  JWT_COOKIE_EXPIRES_IN: ${JWT_COOKIE_EXPIRES_IN:-5}
+  REFRESH_TOKEN_EXPIRES_IN: ${REFRESH_TOKEN_EXPIRES_IN:-14}
+  EMAIL_USERNAME: ${EMAIL_USERNAME:-6cb073a8a26400}
+  EMAIL_PASSWORD: ${EMAIL_PASSWORD:-f766956eefaa03}
+  EMAIL_HOST: ${EMAIL_HOST:-sandbox.smtp.mailtrap.io}
+  EMAIL_PORT: ${EMAIL_PORT:-2525}
+command: >
+  sh -c "node seeding.js && npm start"
 
 volumes:
   mongodb_data:

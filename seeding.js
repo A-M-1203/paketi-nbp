@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Branch = require("./models/branchModel");
 const dotenv = require("dotenv");
 const Courier = require("./models/courierModel");
+const Dispatcher = require("./models/dispatcherModel");
 const bcrypt = require("bcrypt");
 
 dotenv.config({ path: "./config.env" });
@@ -65,7 +66,6 @@ const branches = [
     location: { type: "Point", coordinates: [43.3209, 21.8958] },
   },
 ];
-
 const couriers = [
   {
     fullName: "Marko Markovic",
@@ -87,11 +87,21 @@ const couriers = [
   },
 ];
 
+const dispatchers = [
+  {
+    fullName: "Jovan Jovanovic",
+    email: "jovan@dispecer.com",
+    password: bcrypt.hashSync("jovan123", 12),
+  },
+];
+
 async function seed() {
   await Branch.deleteMany();
   await Branch.insertMany(branches);
   await Courier.deleteMany();
   await Courier.insertMany(couriers);
+  await Dispatcher.deleteMany();
+  await Dispatcher.insertMany(dispatchers);
   mongoose.connection.close();
 }
 

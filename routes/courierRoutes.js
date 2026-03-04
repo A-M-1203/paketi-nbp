@@ -8,6 +8,9 @@ router.route("/")
 .put(courierController.updateCourier)
 .delete(courierController.deleteCourier);
 
+router.route("/all")
+.get(courierController.getAllCouriers);
+
 router.route("/find")
 .get(courierController.findCouriersByStatusAndRegion);
 

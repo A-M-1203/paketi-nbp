@@ -182,28 +182,75 @@ module.exports.setBranchId = catchAsync(async (req,res,next) => {
 });
 
 module.exports.assignCourier = catchAsync(async (req,res,next) => {
-    const courier=await Courier.findOne({_id:req.body.courierId});
-    if(!courier){
+    const courier = await Courier.findOne({ _id: req.body.courierId });
+    if (!courier) {
         return res.status(400).json({
-            status:"failure",
-            message:"Kurir nije pronađen"
+            status: "failure",
+            message: "Kurir nije pronađen"
         });
     }
-    const result=await Shipment.updateOne(
-        {_id:req.body._id},
-        {$set:{courier:{courierId:courier._id,name:courier.fullName}}}
+
+    const shipment = await Shipment.findById(req.body._id);
+    if (!shipment) {
+        return res.status(400).json({
+            status: "failure",
+            message: "Pošiljka nije pronađena"
+        });
+    }
+
+    const statuses = shipment.statuses || [];
+    const latestStatus = statuses.length > 0 ? statuses[statuses.length - 1].status : null;
+    const allowedStatuses = [
+        'Pošiljka uneta u sistem',
+        'Pošiljka u lokalnom centru',
+        'Pošiljka u skladištu'
+    ];
+
+    if (!latestStatus || !allowedStatuses.includes(latestStatus)) {
+        return res.status(400).json({
+            status: "failure",
+            message: "Kurira je moguće dodeliti ili promeniti samo dok je pošiljka u statusu: Pošiljka uneta u sistem, Pošiljka u lokalnom centru ili Pošiljka u skladištu."
+        });
+    }
+
+    const result = await Shipment.updateOne(
+        { _id: req.body._id },
+        { $set: { courier: { courierId: courier._id, name: courier.fullName } } }
     );
-    const shipment=await Shipment.findById(req.body._id);
-    if(result.matchedCount===1){
+    const updatedShipment = await Shipment.findById(req.body._id);
+    if (result.matchedCount === 1) {
         res.status(200).json({
-            status:"success",
-            data:{shipment}
+            status: "success",
+            data: { shipment: updatedShipment }
         });
     }
-    else{
+    else {
         res.status(400).json({
-            status:"failure",
-            message:"Pošiljka nije pronađena"
+            status: "failure",
+            message: "Pošiljka nije pronađena"
         });
     }
+}); 
+
+module.exports.getAllShipments = catchAsync(async (req, res, next) => {
+    const shipments = await Shipment.find().sort({ _id: -1 });
+    res.status(200).json({
+        data: {
+            shipments
+        }
+    });
+});
+
+module.exports.getUnassignedShipments = catchAsync(async (req, res, next) => {
+    const shipments = await Shipment.find({
+        $or: [
+            { "courier.courierId": { $exists: false } },
+            { "courier.courierId": null }
+        ]
+    }).sort({ _id: -1 });
+    res.status(200).json({
+        data: {
+            shipments
+        }
+    });
 });

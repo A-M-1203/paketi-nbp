@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
+const Courier = require('../models/courierModel');
+const Dispatcher = require('../models/dispatcherModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
@@ -89,19 +92,28 @@ exports.login = catchAsync(async (req, res, next) => {
       return createSendToken(user, 200, res, refreshToken);
     }
 
-    const Courier = require('../models/courierModel');
-    const bcrypt = require('bcrypt');
-    const courier = await Courier.findOne({ email });
+    const courier = await Courier.findOne({ email }).select('+password');
 
-    if (!courier || !courier.password || !(await bcrypt.compare(password, courier.password))) {
+    if (courier && courier.password && (await bcrypt.compare(password, courier.password))) {
+      const token = createToken(courier._id, 'kurir');
+      return res.status(200).json({
+        status: 'success',
+        token,
+        data: courier
+      });
+    }
+
+    const dispatcher = await Dispatcher.findOne({ email }).select('+password');
+
+    if (!dispatcher || !dispatcher.password || !(await bcrypt.compare(password, dispatcher.password))) {
       return next(new AppError('Incorrect email or password', 401));
     }
 
-    const token = createToken(courier._id, 'kurir');
+    const token = createToken(dispatcher._id, 'dispecer');
     res.status(200).json({
       status: 'success',
       token,
-      data: courier
+      data: dispatcher
     });
 });
 
@@ -211,5 +223,39 @@ exports.protectCourier = catchAsync(async (req, res, next) => {
       }
 
       req.courier = courier;
+      next();
+});
+
+exports.protectDispatcher = catchAsync(async (req, res, next) => {
+      let token = null;
+      if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+          token = req.headers.authorization.split(' ')[1];
+      } else if (req.headers.cookie) {
+          const match = req.headers.cookie.match(/\bjwt=([^;]+)/);
+          if (match) token = match[1].trim();
+      }
+
+      if (!token) {
+          return next(new AppError('Dispečer autentifikacija je obavezna', 401));
+      }
+
+      let decoded;
+      try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+          return next(new AppError('Nevažeći token', 401));
+      }
+
+      if (decoded.role !== 'dispecer') {
+          return next(new AppError('Nemate pravo pristupa', 403));
+      }
+
+      const dispatcher = await Dispatcher.findById(decoded.id);
+
+      if (!dispatcher) {
+          return next(new AppError('Dispečer nije pronađen', 401));
+      }
+
+      req.dispatcher = dispatcher;
       next();
 });

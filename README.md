@@ -60,3 +60,16 @@ Otvoriti frontend preko web pretraživača na adresi:
 ```
 localhost:3000
 ```
+
+## Nalozi za kurire:
+
+Email: marko@kurir.com
+Password: marko123
+
+Email: petar@kurir.com
+Password: petar123
+
+## Nalog za dispečera:
+
+Email: jovan@dispecer.com
+Password: jovan123
